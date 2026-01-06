@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h2>Ingest Cutoff Data</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Excel File Path</label><br>
+    <input type="text" name="file_path" required><br><br>
+
+    <label>Round</label><br>
+    <input type="text" name="round_type" placeholder="1gen / 2gen / 2ext" required><br><br>
+
+    <label>Year</label><br>
+    <input type="number" name="year" required><br><br>
+
+    <input type="submit" class="default" value="Run Ingestion">
+</form>
+{% endblock %}

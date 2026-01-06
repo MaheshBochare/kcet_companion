@@ -1,0 +1,10 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h2>Generate College-Branch Mapping</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <p>This will create all College-Branch combinations automatically.</p>
+    <input type="submit" class="default" value="Run Ingestion">
+</form>
+{% endblock %}

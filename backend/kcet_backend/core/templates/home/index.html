@@ -1,0 +1,15 @@
+{% extends "home/base.html" %}
+{% block content %}
+{% load static %}
+
+
+{% include "home/components/hero_search.html" %}
+<main class="container">
+
+{% include "home/components/result_grid.html" %}
+{% include "home/components/dashboard_cards.html" %}
+{% include "home/components/action_buttons.html" %}
+
+</main>
+
+{% endblock %}

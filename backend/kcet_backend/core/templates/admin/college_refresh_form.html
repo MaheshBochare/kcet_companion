@@ -1,0 +1,10 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h2>Refresh College Data</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <p>This will scrape live data and update the College database.</p>
+    <input type="submit" class="default" value="Run Refresh">
+</form>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block object-tools %}
+<div class="object-tools">
+    <a href="ingest/" class="button">➕ Ingest Branch Data</a>
+</div>
+{{ block.super }}
+{% endblock %}

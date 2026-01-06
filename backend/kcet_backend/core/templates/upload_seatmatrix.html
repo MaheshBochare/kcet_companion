@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Seat Matrix</title>
+</head>
+<body>
+
+<h2>Upload Seat Matrix PDF</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Seat Matrix PDF:</label><br>
+    <input type="file" name="pdf" required><br><br>
+
+    <label>Year:</label><br>
+    <input type="text" name="year" placeholder="2024" required><br><br>
+
+    <label>Round:</label><br>
+    <input type="text" name="round" placeholder="R1" required><br><br>
+
+    <button type="submit">Upload & Process</button>
+</form>
+
+</body>
+</html>

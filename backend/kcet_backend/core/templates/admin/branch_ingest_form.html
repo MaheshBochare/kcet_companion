@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h2>Ingest Branch Data</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Data File Path:</label><br>
+    <input type="text" name="file_path" style="width: 400px" required>
+    <br><br>
+    <input type="submit" class="default" value="Run Ingestion">
+</form>
+
+{% endblock %}

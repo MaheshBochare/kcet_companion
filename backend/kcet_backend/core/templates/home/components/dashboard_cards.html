@@ -1,0 +1,36 @@
+<div class="horizontal-cards">
+
+<div class="horizontal-card">
+<h4><i class="fas fa-link text-primary me-2"></i>Quick Links</h4>
+{% for link in quick_links %}
+<a href="{{ link.url }}" class="d-block py-1">{{ link.title }}</a>
+{% endfor %}
+</div>
+
+<div class="horizontal-card">
+<h4><i class="fas fa-chart-pie text-primary me-2"></i>Statistics</h4>
+{% for stat in statistics %}
+    {% include "home/components/stat_card.html" with value=stat.value label=stat.name %}
+{% endfor %}
+</div>
+
+<div class="horizontal-card">
+  <h4>
+    <i class="fas fa-university text-primary me-2"></i>
+    {{ feature_title }} Colleges
+  </h4>
+
+  {% for college in featured_colleges %}
+    <div class="featured-card"
+         onclick="window.location='/college/{{ college.id }}/'">
+
+      <span class="badge">{{ college.badge }}</span>
+
+      <h6 class="fw-bold mt-2">{{ college.name }}</h6>
+      <p class="text-muted small mb-1">{{ college.description }}</p>
+
+    </div>
+  {% endfor %}
+</div>
+
+</div>

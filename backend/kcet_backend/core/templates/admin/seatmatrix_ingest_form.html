@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h1>Upload Seat Matrix</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="margin-bottom:15px;">
+        <label><strong>Select Excel File</strong></label><br>
+        <input type="file" name="file" accept=".pdf" required>
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label><strong>Round</strong></label><br>
+        <input type="text" name="round" placeholder="e.g. 1gen" required>
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label><strong>Year</strong></label><br>
+        <input type="text" name="year" placeholder="e.g. 2024" required>
+    </div>
+
+    <input type="submit" value="Ingest Seat Matrix" class="default">
+</form>
+
+{% endblock %}
