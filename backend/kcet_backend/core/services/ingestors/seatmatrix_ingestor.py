@@ -74,5 +74,5 @@ class SeatMatrixIngestor:
                 print("❌ Row failed:", e)
                 skipped += 1
 
-        print("✅ Inserted:", inserted)
-        print("⚠️ Skipped:", skipped)
+        print("Inserted:", inserted)
+        print("Skipped:", skipped)

@@ -61,5 +61,5 @@ class CutoffIngestor:
                 skipped += 1
                 print("❌ Row failed:", e)
 
-        print("✅ Inserted:", inserted)
-        print("⚠️ Skipped:", skipped)
+        print("Inserted:", inserted)
+        print(" Skipped:", skipped)

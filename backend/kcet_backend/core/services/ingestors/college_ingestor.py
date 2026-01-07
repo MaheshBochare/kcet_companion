@@ -8,7 +8,7 @@ class CollegeScrapeIngestor:
     """
 
     def run(self):
-        print("\n🚀 Starting College Scrape + Ingestion Pipeline...\n")
+        print("\n🚀 Starting College Scrape + Ingestion Pipeline..\n")
 
         count = CollegeIngestionService.refresh_colleges()
 

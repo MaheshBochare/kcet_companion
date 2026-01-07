@@ -9,7 +9,7 @@ class CollegeBranchIngestor:
         branches = {b.Branch_Code: b for b in Branch.objects.all()}
 
         with transaction.atomic():
-            for college_name, college in colleges.items():
+            for college_code, college in colleges.items():
                 for Branch_Code, branch in branches.items():
 
                     obj, was_created = CollegeBranch.objects.get_or_create(
@@ -20,5 +20,5 @@ class CollegeBranchIngestor:
                     if was_created:
                         created += 1
 
-        print(f"✅ CollegeBranch ingestion completed. Created {created} records.")
+        print(f"✅ CollegeBranch ingestion completed. got college  {created} records.")
         return created
