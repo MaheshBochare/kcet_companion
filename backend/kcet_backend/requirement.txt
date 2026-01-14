@@ -1,0 +1,34 @@
+# Core Framework
+Django==4.2.10
+djangorestframework==3.14.0
+
+# Database
+psycopg2-binary>=2.9
+
+# Environment & Config
+python-dotenv>=1.0
+
+# LLM Client
+groq>=0.9
+
+# RAG / NLP Stack
+sentence-transformers>=2.6
+faiss-cpu>=1.8
+pypdf>=4.0
+torch>=2.1
+
+# Data Processing
+pandas>=2.1
+numpy>=1.26
+openpyxl>=3.1
+pdfplumber>=0.10
+
+# Fuzzy Matching
+rapidfuzz>=3.6
+
+# Web Automation / Scraping
+selenium>=4.18
+webdriver-manager>=4.0
+
+# Networking
+requests>=2.31

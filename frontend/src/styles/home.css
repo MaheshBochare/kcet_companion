@@ -1,0 +1,206 @@
+:root {
+  --primary: #4361ee;
+  --secondary: #3a0ca3;
+  --bg: #f5f7fa;
+  --radius: 14px;
+  --shadow-sm: 0 6px 14px rgba(0,0,0,.08);
+  --shadow-lg: 0 14px 36px rgba(0,0,0,.12);
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg,#f5f7fa,#eef1f7);
+  color:#1f2937;
+}
+
+/* ================= HEADER ================= */
+
+.main-header {
+  background: linear-gradient(135deg,#4361ee,#3a0ca3);
+  padding: 2.6rem 1rem 1.9rem;
+  color: white;
+  text-align: center;
+  border-radius: 0 0 36px 36px;
+  box-shadow: var(--shadow-lg);
+}
+
+.search-wrapper { 
+  max-width: 780px; 
+  margin: 1.4rem auto 0; 
+  position: relative;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box {
+  position:absolute;
+  width:100%;
+  background:white;
+  border-radius:14px;
+  box-shadow:0 14px 36px rgba(0,0,0,.2);
+  z-index:1000;
+  margin-top:8px;
+}
+
+.search-item { padding:12px 16px; cursor:pointer; }
+.search-item:hover { background:#eef2ff; }
+
+.college-name { font-weight:600; }
+.college-sub { font-size:13px; color:#555; }
+
+/* ================= CARDS ================= */
+
+.horizontal-cards {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:26px;
+  margin-top:2rem;
+}
+
+.horizontal-card {
+  flex:0 1 340px;
+  height:340px;
+  padding:1.4rem;
+  border-radius:var(--radius);
+  background:white;
+  box-shadow:var(--shadow-sm);
+  overflow-y:auto;
+  position:relative;
+  transition:all .35s ease;
+}
+
+.horizontal-card:hover {
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* Scrollbar */
+
+.horizontal-card::-webkit-scrollbar { width:6px; }
+.horizontal-card::-webkit-scrollbar-thumb {
+  background:linear-gradient(180deg,#4361ee,#3a0ca3);
+  border-radius:10px;
+}
+
+/* Scroll fade */
+
+.horizontal-card::after {
+  content:"";
+  position:sticky;
+  bottom:0;
+  height:28px;
+  display:block;
+  background:linear-gradient(to top,white,transparent);
+}
+
+.horizontal-card::before {
+  content:"";
+  position:sticky;
+  top:40px;
+  height:24px;
+  display:block;
+  background:linear-gradient(to bottom,white,transparent);
+}
+
+/* Glow */
+
+.horizontal-card::selection {}
+
+.horizontal-card:hover::before {
+  opacity:1;
+}
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+.action-btn {
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 999px;
+  min-width: 190px;
+  transition: all .25s ease;
+}
+.action-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(67,97,238,.35);
+}
+
+
+/* ================= QUICK LINKS ================= */
+
+.quick-links {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.quick-link-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 14px;
+  border-radius:10px;
+  background:#f3f5ff;
+  text-decoration:none;
+  color:#333;
+  font-weight:500;
+  transition:.25s ease;
+}
+
+.quick-link-left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.quick-link-item i { color:var(--primary); }
+
+.quick-link-item:hover {
+  background:linear-gradient(120deg,#4361ee,#3a0ca3);
+  color:white;
+  transform:translateX(4px);
+}
+
+.quick-link-item:hover i { color:white; }
+
+.quick-link-item.highlight {
+  border-left:4px solid #f59e0b;
+  background:#fff7e6;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-primary {
+  background:linear-gradient(120deg,#4361ee,#3a0ca3);
+  border:none;
+  box-shadow:var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width:900px) {
+  .horizontal-card { height:300px; }
+}
+
+@media (max-width:600px) {
+  .horizontal-card { height:260px; }
+}
+.footer {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin-top: 3rem;
+    border-radius: 36px 36px 0 0;
+    box-shadow: var(--shadow-lg);
+}

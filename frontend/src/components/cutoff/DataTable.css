@@ -1,0 +1,49 @@
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  min-width: 1000px;
+}
+
+.data-table th {
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  color: white;
+  font-weight: 600;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+}
+
+.data-table th:hover {
+  background: linear-gradient(135deg, #3a56e0, #2f0c8f);
+}
+
+.data-table td {
+  padding: 8px 10px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: #f8f9fc;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(67,97,238,.08);
+}
+
+.sort-arrow {
+  margin-left: 6px;
+  font-size: 10px;
+}

@@ -1,17 +1,17 @@
-from rapidfuzz import process, fuzz
 from django.http import JsonResponse
 from core.models import College
 
-def search_suggestions(request):
-    q = request.GET.get("q","").lower()
-    colleges = list(College.objects.values("college_name","location","college_code"))
+def search_colleges(request):
+    q = request.GET.get("q", "").strip()
 
-    names = [c["college_name"] for c in colleges]
-    matches = process.extract(q, names, scorer=fuzz.WRatio, limit=10)
+    results = College.objects.filter(College_name__icontains=q)[:10]
 
-    results = []
-    for name, score, idx in matches:
-        if score >= 60:
-            results.append({**colleges[idx], "score": score})
+    data = [{
+        "name": c.College_name,
+        "location": c.location,
+        "naac": c.naaccrating,
+        "fees": c.firstyearfees,
+        "highest_package": c.highestpackage
+    } for c in results]
 
-    return JsonResponse({"suggestions": results})
+    return JsonResponse({"results": data})

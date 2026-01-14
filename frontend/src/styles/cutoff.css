@@ -1,0 +1,27 @@
+@import "./home.css";
+
+/* RESULT CARDS */
+.result-card {
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-footer {
+    border-top: none;
+}
+
+/* MODAL */
+.modal-content {
+    border-radius: 18px;
+}
+
+.modal-header {
+    background: linear-gradient(120deg, var(--primary), var(--secondary));
+    color: white;
+}

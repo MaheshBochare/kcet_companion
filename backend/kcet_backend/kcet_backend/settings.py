@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "core",
+    "corsheaders",
+
 ]
 
 MIDDLEWARE = [
@@ -36,9 +38,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "kcet_backend.urls"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 TEMPLATES = [
     {
@@ -138,3 +145,18 @@ TEMPLATES = [
         },
     },
 ]
+#Logging
+LOGGING = {
+    "version": 1,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "chatbot": {"handlers": ["console"], "level": "INFO"},
+    },
+}
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}

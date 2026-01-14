@@ -1,0 +1,7 @@
+body { margin:0; font-family:Segoe UI; background:#f4f6fb; }
+.sidebar { width:220px; background:#1e3a8a; color:white; position:fixed; height:100vh; padding:20px }
+.sidebar a { display:block; color:white; margin:10px 0; text-decoration:none }
+.main { margin-left:240px; padding:20px }
+.topbar { background:white; padding:15px; margin-bottom:20px; border-radius:8px }
+table { width:100%; background:white; border-radius:8px; overflow:hidden }
+th, td { padding:10px; border-bottom:1px solid #ddd }
