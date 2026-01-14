@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: kcet-backend
+    env: python
+    rootDir: backend/kcet_backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn kcet_backend.wsgi
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
