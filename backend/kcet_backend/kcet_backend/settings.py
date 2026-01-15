@@ -72,7 +72,7 @@ WSGI_APPLICATION = "kcet_backend.wsgi.application"
 # Database (PostgreSQL only)
 # ============================
 
-DATABASES = {
+'''DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB", "kcet_db"),
@@ -81,7 +81,18 @@ DATABASES = {
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
+}'''
+import dj_database_url
+import os
+
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.getenv("postgresql://kcet_user:rBrcAB8OEaZf5lIc5o7xUOI8QqGx4v6d@dpg-d5jr5fvfte5s738s2ikg-a/kcet_db_69nb"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
+
 
 # ============================
 # Authentication
