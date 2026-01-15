@@ -12,7 +12,6 @@ from core.infrastructure.django_models.seat_matrix import SeatMatrix
 from core.services.ingestors.branch_ingestor import BranchIngestor
 from core.services.ingestors.cutoff_ingestor import CutoffIngestor 
 from core.services.preprocessing.cutoff_preprocessor import  CutoffDataPreprocessor
-from core.services.ingestors.college_ingestor import CollegeScrapeIngestor
 from core.services.ingestors.college_branch_ingestor import CollegeBranchIngestor
 from core.services.ingestors.seatmatrix_ingestor import SeatMatrixIngestor
 from django.contrib import admin, messages
@@ -90,28 +89,50 @@ class BranchAdmin(admin.ModelAdmin):
 
         return render(request, "admin/branch_ingest_form.html")
     
+from django.contrib import admin
+from django.urls import path
+from django.shortcuts import redirect
+from django.contrib import messages
+
+from core.services.ingestors.college_ingestor import CollegePreprocessor, CollegeIngestor
+from core.models import College
+
+
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):
+    list_display = ("college_code", "College_name", "location", "naaccrating", "Rating")
     change_list_template = "admin/college_changelist.html"
-    list_display = ("college_code", "College_name", "location", "naaccrating")
 
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("refresh/", self.admin_site.admin_view(self.refresh_view), name="college_refresh"),
+            path("ingest/", self.admin_site.admin_view(self.ingest_colleges))
         ]
         return custom_urls + urls
 
-    def refresh_view(self, request):
-        if request.method == "POST":
-            try:
-                count = CollegeScrapeIngestor().run()
-                self.message_user(request, f"✅ {count} colleges refreshed successfully", messages.SUCCESS)
-                return redirect("..")
-            except Exception as e:
-                self.message_user(request, str(e), messages.ERROR)
+    def ingest_colleges(self, request):
+        try:
+            processor = CollegePreprocessor(
+                scrape_url="https://collegedunia.com/btech/karnataka-colleges?exam_id=61",
+                official_excel=r"C:\Users\mahes\OneDrive\Desktop\kcet_companion\backend\kcet_backend\core\data\collegedunia_college_names.xlsx",
+                sheet_index=3
+            )
 
-        return render(request, "admin/college_refresh_form.html")
+            df = processor.run()
+            ingestor = CollegeIngestor(df)
+            report = ingestor.ingest()
+
+            messages.success(
+                request,
+                f"Ingestion complete — Created: {report['created']} | "
+                f"Updated: {report['updated']} | Skipped: {report['skipped']}"
+            )
+
+        except Exception as e:
+            messages.error(request, f"Ingestion failed: {e}")
+
+        return redirect("..")
+
 
 @admin.register(CollegeBranch)
 class CollegeBranchAdmin(admin.ModelAdmin):

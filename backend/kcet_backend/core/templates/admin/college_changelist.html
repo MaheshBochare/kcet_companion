@@ -1,7 +1,15 @@
 {% extends "admin/change_list.html" %}
+{% load static %}
+
 {% block object-tools %}
 <div class="object-tools">
-    <a href="refresh/" class="button">🔄 Refresh Colleges</a>
+    <ul>
+        <li>
+            <a href="ingest/" class="button" style="background:#417690;color:white;">
+                🚀 Run College Ingestion
+            </a>
+        </li>
+    </ul>
 </div>
 {{ block.super }}
 {% endblock %}

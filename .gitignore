@@ -29,3 +29,6 @@ Thumbs.db
 # Local env
 .env
 
+echo *.ipynb >> .gitignore
+echo *.csv >> .gitignore
+echo logs/ >> .gitignore
