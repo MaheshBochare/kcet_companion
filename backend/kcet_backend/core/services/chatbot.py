@@ -2,14 +2,20 @@ import os, re, logging, hashlib
 from django.core.cache import cache
 from rapidfuzz import process
 from django.db.models import Avg
-from groq import Groq
 
 from core.models import College, Branch, CollegeBranch, Cutoff, SeatMatrix
 from core.services.intent import detect_intent
 #from core.services.rag.rag_engine import answer_from_brochure
 
 logger = logging.getLogger("chatbot")
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+def get_groq_client():
+    from groq import Groq
+    api_key = os.getenv("GROQ_API_KEY")
+
+    if not api_key:
+        raise RuntimeError("GROQ_API_KEY is not configured")
+
+    return Groq(api_key=api_key)
 
 def get_answer(question):
     from core.services.rag.rag_engine import answer_from_brochure
@@ -64,17 +70,27 @@ def lookup_seats(cb, category):
 
 def groq_answer(system_prompt, user_prompt):
     try:
+        client = get_groq_client()
+
         completion = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=[{"role":"system","content":system_prompt},
-                      {"role":"user","content":user_prompt}],
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
             temperature=0.3,
             max_tokens=600,
         )
+
         return completion.choices[0].message.content
-    except Exception as e:
+
+    except RuntimeError:
+        return "⚠️ AI service is not configured."
+
+    except Exception:
         logger.exception("LLM failure")
         return "AI service is temporarily unavailable."
+
 
 def chatbot_engine(message, request):
 
