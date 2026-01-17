@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from core.models import College
 
+
 def search_colleges(request):
     q = request.GET.get("q", "").strip()
 

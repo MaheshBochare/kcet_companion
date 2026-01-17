@@ -5,7 +5,7 @@ import { api } from "./client";
  * - Defaults to page 1
  * - Sends ONLY non-empty filters
  */
-export const fetchCutoffRanks = ({
+export const fetchSeatmatrix = ({
   page = 1,
   college,
   branch,
@@ -22,5 +22,5 @@ export const fetchCutoffRanks = ({
   if (year?.trim()) params.year = year.trim();
 
   // ✅ IMPORTANT: use api, NOT axios
-  return api.get("/cutoff-table/", { params });
+  return api.get("/seatmatrix-table/", { params });
 };

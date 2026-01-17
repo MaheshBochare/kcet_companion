@@ -25,4 +25,5 @@ webdriver-manager==4.0.2
 pdfplumber==0.11.9
 dj-database-url
 psycopg2-binary
+django-redis
 

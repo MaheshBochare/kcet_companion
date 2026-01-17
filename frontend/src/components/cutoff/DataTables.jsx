@@ -1,45 +1,43 @@
-import "./DataTable.css";
-
-export default function DataTable({ rows, columns, sort, setSort, page, pageSize }) {
-  if (!rows.length) {
-    return <p>No Data Available</p>;
+export default function DataTable({ rows }) {
+  if (!rows || rows.length === 0) {
+    return <p style={{ marginTop: "12px" }}>No data available</p>;
   }
 
-  const start = (page - 1) * pageSize;
-  const pageData = rows.slice(start, start + pageSize);
-
-  const toggleSort = (col) => {
-    setSort(prev => ({
-      key: col,
-      dir: prev.key === col && prev.dir === "asc" ? "desc" : "asc"
-    }));
-  };
+  const columns = Object.keys(rows[0]);
 
   return (
-    <div className="table-wrapper">
-      <table className="data-table">
+    <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+      <table
+        border="1"
+        cellPadding="6"
+        style={{
+          borderCollapse: "collapse",
+          minWidth: "1200px",
+          whiteSpace: "nowrap"
+        }}
+      >
         <thead>
           <tr>
             {columns.map(col => (
-              <th key={col} onClick={() => toggleSort(col)}>
+              <th
+                key={col}
+                style={{
+                  background: "#f5f5f5",
+                  position: "sticky",
+                  top: 0
+                }}
+              >
                 {col}
-                {sort.key === col && (
-                  <span className="sort-arrow">
-                    {sort.dir === "asc" ? "▲" : "▼"}
-                  </span>
-                )}
               </th>
             ))}
           </tr>
         </thead>
 
         <tbody>
-          {pageData.map((row, idx) => (
-            <tr key={idx}>
+          {rows.map((row, i) => (
+            <tr key={i}>
               {columns.map(col => (
-                <td key={col}>
-                  {row[col] !== null && row[col] !== "" ? row[col] : "-"}
-                </td>
+                <td key={col}>{row[col]}</td>
               ))}
             </tr>
           ))}

@@ -3,6 +3,18 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv(
+            "REDIS_URL",
+            "redis://127.0.0.1:6379/1"  # local fallback
+        ),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 # ============================
 # Base
 # ============================
@@ -72,7 +84,7 @@ WSGI_APPLICATION = "kcet_backend.wsgi.application"
 # Database (PostgreSQL only)
 # ============================
 
-'''DATABASES = {
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB", "kcet_db"),
@@ -81,8 +93,8 @@ WSGI_APPLICATION = "kcet_backend.wsgi.application"
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
-}'''
-import dj_database_url
+}
+'''import dj_database_url
 import os
 
 DATABASES = {
@@ -91,7 +103,7 @@ DATABASES = {
         conn_max_age=600,
         ssl_require=True,
     )
-}
+}'''
 
 
 # ============================

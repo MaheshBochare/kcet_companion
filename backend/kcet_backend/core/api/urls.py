@@ -7,7 +7,10 @@ from core.api.viewsets.seat_matrix_viewset import SeatMatrixViewSet
 from core.api.viewsets.Category_viewset import CategoryViewSet
 from core.api.viewsets.subscriber_viewset import SubscriberViewSet
 from core.api.viewsets.chatlog_viewset import ChatLogViewSet
-from core.api.viewsets.search_viewset import CollegeSearchViewSet 
+from core.api.viewsets.search_viewset import CollegeSearchViewSet
+from core.api.viewsets.seatmatrix_table_viewset import SeatMatrixTableViewSet
+
+
 #from core.api.views.chatbot_view import KCETChatbotView
 '''from core.api.views.search_views import search_suggestions
 from core.api.views.colleges import CollegeListView
@@ -47,5 +50,12 @@ path("colleges/", CollegeListView.as_view()),
 path("cutoff/", CutoffView.as_view()),
 path("seatmatrix/", SeatMatrixView.as_view()),
 path("stats/", StatsView.as_view()),'''
+
+
+router.register(
+    r"seatmatrix-table",
+    SeatMatrixTableViewSet,
+    basename="seatmatrix-table"
+)
 
 urlpatterns = router.urls

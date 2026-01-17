@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchCutoffRanks } from "../../api/cutoffApi";
-import Filters from "./filters";
-import DataTable from "./DataTables";
-import Pagination from "./pagination";
+import { fetchSeatmatrix } from "../../api/seatmatrixapi";
+import Filters from "@/components/common/filters";
+import DataTable from "@/components/common/DataTables";
+import Pagination from "@/components/common/pagination";
 
-export default function CutoffContent() {
+
+export default function Seatmatrixcontent() {
   // -----------------------------
   // Data
   // -----------------------------
@@ -35,7 +36,7 @@ export default function CutoffContent() {
   // Fetch cutoff data
   // -----------------------------
   useEffect(() => {
-    fetchCutoffRanks({
+    fetchSeatmatrix({
       page,
       college,
       branch,
@@ -47,7 +48,7 @@ export default function CutoffContent() {
         const data = res?.data || {};
         const resultRows = data.results || [];
 
-        console.log("✅ Cutoff API rows:", resultRows.length);
+        console.log("✅ Seatmatrix API rows:", resultRows.length);
 
         setRows(resultRows);
 
@@ -57,7 +58,7 @@ export default function CutoffContent() {
         setTotalPages(data.pagination?.total_pages || 1);
       })
       .catch((err) => {
-        console.error("❌ Cutoff API error:", err);
+        console.error("❌Seatmatrix API error:", err);
         setRows([]);
         setColumns([]);
         setTotalPages(1);
@@ -89,7 +90,7 @@ export default function CutoffContent() {
   // -----------------------------
   return (
     <div>
-      <h2>Cutoff Analyzer</h2>
+      <h2>seatmatrix analyzer</h2>
 
       <Filters
         college={college}
