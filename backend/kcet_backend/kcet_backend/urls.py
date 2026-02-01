@@ -17,22 +17,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from core.api.views.csrf import csrf_token_view
 from core.views import refresh_colleges
 from core.views import upload_seatmatrix
 from core.api.views.chatbot_view import KCETChatbotView
 from django.urls import path
 from core.views import home_view
 from core.views import search_suggestions
-
-
+from django.urls import path, include
+from core.api.views.auth_test import AuthTestView
+from core.api.views.auth_otp import SendOTPView
+from core.api.views.auth_login import VerifyOTPView
 urlpatterns = [
-    path("api/", include("core.api.urls")),
+
+
+    path("admin/", admin.site.urls),
+    path("api/", include("core.api.urls")),  # 🔴 REQUIRED
+    path("auth-test/", AuthTestView.as_view(), name="auth-test"),
     path('admin/', admin.site.urls),
     path("refresh-colleges/", refresh_colleges),
     path("upload-seatmatrix/", upload_seatmatrix, name="upload_seatmatrix"),
     path("chatbot/", KCETChatbotView.as_view(), name="kcet_chatbot"),
     path("home", home_view, name="home"),
     path("search/", search_suggestions, name="search_suggestions"),
+    path("auth/send-otp/", SendOTPView.as_view()),
+    path("auth/verify-otp/", VerifyOTPView.as_view()),
 
 
 ]

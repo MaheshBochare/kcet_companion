@@ -3,37 +3,50 @@ import { fetchCutoffRanks } from "../../api/cutoffApi";
 import Filters from "./filters";
 import DataTable from "./DataTables";
 import Pagination from "./pagination";
+import { useFilters } from "@/hooks/useFilters";
+import "@/styles/cutoff.css";
 
 export default function CutoffContent() {
-  // -----------------------------
-  // Data
-  // -----------------------------
+  /* -----------------------------
+     Table Data
+  ----------------------------- */
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
-  // -----------------------------
-  // Pagination
-  // -----------------------------
+  /* -----------------------------
+     Pagination
+  ----------------------------- */
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // -----------------------------
-  // Filters
-  // -----------------------------
-  const [college, setCollege] = useState("");
-  const [branch, setBranch] = useState("");
-  const [category, setCategory] = useState("");
-  const [round, setRound] = useState("");
-  const [year, setYear] = useState("");
+  /* -----------------------------
+     Filters (Custom Hook)
+  ----------------------------- */
+  const {
+    college,
+    branch,
+    category,
+    round,
+    year,
+    showFilters,
+    handleChange,
+    toggleFilters,
+    clearAllFilters,
+    setCollege,
+    setBranch,
+    setCategory,
+    setRound,
+    setYear,
+  } = useFilters(setPage);
 
-  // -----------------------------
-  // Sorting
-  // -----------------------------
+  /* -----------------------------
+     Sorting
+  ----------------------------- */
   const [sort, setSort] = useState({ key: "", dir: "asc" });
 
-  // -----------------------------
-  // Fetch cutoff data
-  // -----------------------------
+  /* -----------------------------
+     Fetch Cutoff Data
+  ----------------------------- */
   useEffect(() => {
     fetchCutoffRanks({
       page,
@@ -47,13 +60,8 @@ export default function CutoffContent() {
         const data = res?.data || {};
         const resultRows = data.results || [];
 
-        console.log("✅ Cutoff API rows:", resultRows.length);
-
         setRows(resultRows);
-
-        // Dynamic columns from API
         setColumns(resultRows.length ? Object.keys(resultRows[0]) : []);
-
         setTotalPages(data.pagination?.total_pages || 1);
       })
       .catch((err) => {
@@ -64,9 +72,9 @@ export default function CutoffContent() {
       });
   }, [page, college, branch, category, round, year]);
 
-  // -----------------------------
-  // Sorting logic
-  // -----------------------------
+  /* -----------------------------
+     Sorting Logic
+  ----------------------------- */
   const sortedRows = useMemo(() => {
     if (!sort.key) return rows;
 
@@ -84,36 +92,37 @@ export default function CutoffContent() {
     });
   }, [rows, sort]);
 
-  // -----------------------------
-  // Render
-  // -----------------------------
+  /* -----------------------------
+     Render
+  ----------------------------- */
   return (
-    <div>
-      <h2>Cutoff Analyzer</h2>
-
+    <div className="cutoff-content">
+      {/* Apply Filters (Header always visible, body toggle handled inside) */}
       <Filters
         college={college}
-        setCollege={setCollege}
         branch={branch}
-        setBranch={setBranch}
         category={category}
-        setCategory={setCategory}
         round={round}
-        setRound={setRound}
         year={year}
+        showFilters={showFilters}
+        handleChange={handleChange}
+        toggleFilters={toggleFilters}
+        clearAllFilters={clearAllFilters}
+        setCollege={setCollege}
+        setBranch={setBranch}
+        setCategory={setCategory}
+        setRound={setRound}
         setYear={setYear}
-        setPage={setPage}
       />
 
-      <p className="text-muted">Rows loaded: {sortedRows.length}</p>
-
+      {/* Data Table */}
       <DataTable
         rows={sortedRows}
         columns={columns}
         sort={sort}
         setSort={setSort}
       />
-
+      {/* Pagination */}
       <Pagination
         page={page}
         totalPages={totalPages}

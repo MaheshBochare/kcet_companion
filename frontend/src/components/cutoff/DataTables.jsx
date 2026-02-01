@@ -1,43 +1,108 @@
+import { useEffect, useRef, useState, useMemo } from "react";
+import "@/styles/home.css";
+
 export default function DataTable({ rows }) {
-  if (!rows || rows.length === 0) {
-    return <p style={{ marginTop: "12px" }}>No data available</p>;
+  /* -----------------------------
+     Hooks MUST be at the top
+  ----------------------------- */
+  const tableRef = useRef(null);
+  const [sort, setSort] = useState({ key: "", dir: "asc" });
+
+  /* -----------------------------
+     Empty-safe data
+  ----------------------------- */
+  const safeRows = rows || [];
+  const columns = safeRows.length > 0 ? Object.keys(safeRows[0]) : [];
+
+  /* -----------------------------
+     Sorting
+  ----------------------------- */
+  const sortedRows = useMemo(() => {
+    if (!sort.key) return safeRows;
+
+    return [...safeRows].sort((a, b) => {
+      const x = a[sort.key] ?? "";
+      const y = b[sort.key] ?? "";
+
+      if (!isNaN(x) && !isNaN(y)) {
+        return sort.dir === "asc" ? x - y : y - x;
+      }
+
+      return sort.dir === "asc"
+        ? String(x).localeCompare(String(y))
+        : String(y).localeCompare(String(x));
+    });
+  }, [safeRows, sort]);
+
+  /* -----------------------------
+     Keyboard scrolling (TABLE)
+  ----------------------------- */
+  useEffect(() => {
+    const handleKeyScroll = (e) => {
+      if (!tableRef.current) return;
+
+      const step = 40;
+
+      if (e.key === "ArrowDown") tableRef.current.scrollTop += step;
+      if (e.key === "ArrowUp") tableRef.current.scrollTop -= step;
+      if (e.key === "PageDown") tableRef.current.scrollTop += step * 8;
+      if (e.key === "PageUp") tableRef.current.scrollTop -= step * 8;
+    };
+
+    window.addEventListener("keydown", handleKeyScroll);
+    return () => window.removeEventListener("keydown", handleKeyScroll);
+  }, []);
+
+  /* -----------------------------
+     Sort handler
+  ----------------------------- */
+  const handleSort = (col) => {
+    setSort((prev) => ({
+      key: col,
+      dir: prev.key === col && prev.dir === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  /* -----------------------------
+     Render
+  ----------------------------- */
+  if (safeRows.length === 0) {
+    return <p className="no-data">No data available</p>;
   }
 
-  const columns = Object.keys(rows[0]);
-
   return (
-    <div style={{ overflowX: "auto", maxWidth: "100%" }}>
-      <table
-        border="1"
-        cellPadding="6"
-        style={{
-          borderCollapse: "collapse",
-          minWidth: "1200px",
-          whiteSpace: "nowrap"
-        }}
-      >
+    <div
+      className="table-wrapper"
+      ref={tableRef}
+      tabIndex={0}   // enables keyboard focus
+    >
+      <table className="table">
         <thead>
           <tr>
-            {columns.map(col => (
+            {columns.map((col) => (
               <th
                 key={col}
-                style={{
-                  background: "#f5f5f5",
-                  position: "sticky",
-                  top: 0
-                }}
+                onClick={() => handleSort(col)}
+                className="sortable"
               >
                 {col}
+                {sort.key === col && (
+                  <span className="sort-indicator">
+                    {sort.dir === "asc" ? " ▲" : " ▼"}
+                  </span>
+                )}
               </th>
             ))}
           </tr>
         </thead>
 
         <tbody>
-          {rows.map((row, i) => (
+          {sortedRows.map((row, i) => (
             <tr key={i}>
-              {columns.map(col => (
-                <td key={col}>{row[col]}</td>
+              {columns.map((col) => (
+                <td key={col}>
+                  {row[col] ?? "—"}
+                </td>
               ))}
             </tr>
           ))}

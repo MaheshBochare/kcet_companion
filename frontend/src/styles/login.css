@@ -1,0 +1,211 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ================================
+   🔒 LOGIN PAGE SCOPE
+================================ */
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background-attachment: fixed;
+    color: #f8f9fa;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Apply font & box model ONLY inside login */
+.login-page * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Variables */
+.login-page {
+    --primary: #4361ee;
+    --secondary: #3a0ca3;
+    --accent: #f72585;
+    --light: #f8f9fa;
+    --dark: #212529;
+}
+
+/* ================================
+   Particles
+================================ */
+.login-page #particles-js {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* ================================
+   Header
+================================ */
+.login-page header {
+    width: 100%;
+    padding: 1.5rem 3rem;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-page header .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #fff, #ff7eb3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-page header nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.login-page header nav a {
+    color: var(--light);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ================================
+   Page Center
+================================ */
+.login-page .page-center {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+}
+
+/* ================================
+   Login Card
+================================ */
+.login-page .login-container {
+    background: rgba(255,255,255,0.08);
+    padding: 3rem;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-page .login-container h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+/* ================================
+   Inputs
+================================ */
+.login-page .input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+    text-align: left;
+}
+
+.login-page label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+}
+
+.login-page input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    outline: none;
+}
+
+.login-page .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.7);
+}
+
+/* ================================
+   Buttons
+================================ */
+.login-page .button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #f72585, #ff4d91);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-page .button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ================================
+   OTP Timer
+================================ */
+.login-page .otp-timer {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+/* ================================
+   Floating Circles
+================================ */
+.login-page .floating {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    animation: float 6s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* ================================
+   Footer
+================================ */
+.login-page footer {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255,255,255,0.08);
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    font-size: 0.9rem;
+}

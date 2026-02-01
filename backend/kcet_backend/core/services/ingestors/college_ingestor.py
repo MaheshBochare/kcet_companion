@@ -112,6 +112,7 @@ class CollegeIngestor:
         firstyearfees = row["First_Year_Fees"]
         rating = row["Rating"]
         naac = row["NAAC_Grade"]
+        nationalrank = row["National_Ranking"]
 
         # 🔒 IMPUTATION LAYER
         if pd.isna(highestpackage):
@@ -125,6 +126,8 @@ class CollegeIngestor:
 
         if pd.isna(rating):
             rating = 3.5
+        if pd.isna(nationalrank):
+            nationalrank = None
 
         if not naac or pd.isna(naac):
             naac = "No NAAC"
@@ -138,5 +141,5 @@ class CollegeIngestor:
             "averagepackage": averagepackage,
             "highestpackage": highestpackage,
             "Rating": rating,
-            "nationalrank": row["National_Ranking"]
+            "nationalrank": nationalrank
         }

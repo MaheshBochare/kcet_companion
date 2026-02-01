@@ -26,7 +26,7 @@ class CollegeBranch(models.Model):
         unique_together = ("college", "branch")
 
     def save(self, *args, **kwargs):
-        self.code_branch = f"{self.college.College_code} {self.branch.Branch_Code}"
+        self.code_branch = f"{self.college.college_code} {self.branch.Branch_Code}"
         super().save(*args, **kwargs)
 
     def __str__(self):

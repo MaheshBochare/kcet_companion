@@ -22,6 +22,9 @@ from django.utils.timezone import now
 from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import path
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from core.infrastructure.django_models.roles import User
 
 from core.models import Subscriber, ApprovedGmail
 
@@ -100,22 +103,37 @@ from core.models import College
 
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):
-    list_display = ("college_code", "College_name", "location", "naaccrating", "Rating")
+    list_display = (
+        "college_code",
+        "College_name",
+        "location",
+        "naaccrating",
+        "Rating",
+    )
+
     change_list_template = "admin/college_changelist.html"
 
+    actions = ["download_excel"]
+
+    # ------------------------
+    # Custom Admin URLs
+    # ------------------------
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("ingest/", self.admin_site.admin_view(self.ingest_colleges))
+            path("ingest/", self.admin_site.admin_view(self.ingest_colleges)),
         ]
         return custom_urls + urls
 
+    # ------------------------
+    # Ingest Colleges
+    # ------------------------
     def ingest_colleges(self, request):
         try:
             processor = CollegePreprocessor(
                 scrape_url="https://collegedunia.com/btech/karnataka-colleges?exam_id=61",
                 official_excel=r"C:\Users\mahes\OneDrive\Desktop\kcet_companion\backend\kcet_backend\core\data\collegedunia_college_names.xlsx",
-                sheet_index=3
+                sheet_index=3,
             )
 
             df = processor.run()
@@ -124,14 +142,31 @@ class CollegeAdmin(admin.ModelAdmin):
 
             messages.success(
                 request,
-                f"Ingestion complete — Created: {report['created']} | "
-                f"Updated: {report['updated']} | Skipped: {report['skipped']}"
+                f"Ingestion complete — "
+                f"Created: {report['created']} | "
+                f"Updated: {report['updated']} | "
+                f"Skipped: {report['skipped']}"
             )
 
         except Exception as e:
             messages.error(request, f"Ingestion failed: {e}")
 
         return redirect("..")
+
+    # ------------------------
+    # Download Selected as Excel
+    # ------------------------
+    @admin.action(description="Download selected colleges as Excel")
+    def download_excel(self, request, queryset):
+        fields = [
+            "college_code",
+            "College_name",
+            "location",
+            "naaccrating",
+            "Rating",
+        ]
+        return export_to_excel(queryset, fields, "college_data")
+
 
 
 @admin.register(CollegeBranch)
@@ -305,3 +340,61 @@ class SeatMatrixAdmin(admin.ModelAdmin):
         return export_to_excel(queryset, fields, "seat_matrix_data")
 
     download_excel.short_description = "⬇️ Download Selected as Excel"
+
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from core.models import User
+
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    model = User
+
+    # 🔹 Columns shown in admin list
+    list_display = (
+        "email",
+        "role",
+        "is_approved",
+        "is_active",
+        "is_staff",
+    )
+
+    # 🔹 Filters on right side
+    list_filter = (
+        "role",
+        "is_approved",
+        "is_active",
+        "is_staff",
+    )
+
+    # 🔹 Search box
+    search_fields = ("email",)
+
+    # 🔹 Default ordering
+    ordering = ("email",)
+
+    # 🔹 Fields when editing a user
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Role & Approval", {"fields": ("role", "is_approved")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
+        ("OTP / Session", {"fields": ("otp", "otp_expires_at", "current_session_id")}),
+    )
+
+    # 🔹 Fields when creating a new user
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": (
+                "email",
+                "password1",
+                "password2",
+                "role",
+                "is_approved",
+                "is_active",
+                "is_staff",
+            ),
+        }),
+    )
+
+    USERNAME_FIELD = "email"

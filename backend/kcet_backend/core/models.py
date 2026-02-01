@@ -11,6 +11,7 @@ from core.infrastructure.django_models.seat_matrix import SeatMatrix
 from core.infrastructure.django_models.communication import ApprovedGmail,ChatLog, Subscriber, ApprovedGmail
 from core.infrastructure.django_models.security import UserProfile
 from core.infrastructure.django_models.security import UserRole
+from core.infrastructure.django_models.roles import User
 __all__ = [
     "College",
     "Branch",
@@ -23,4 +24,6 @@ __all__ = [
     "ApprovedGmail",
     "ChatLog",  
     "Subscriber",
+    "User"
+    
 ]

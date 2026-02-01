@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./DashboardLayout.css";
+import "@/styles/cutoff.css";
 
 export default function DashboardLayout({ children }) {
   return (
@@ -19,7 +19,9 @@ export default function DashboardLayout({ children }) {
       {/* Main Area */}
       <div className="main">
         <header className="header">
-          <h2>KCET Engineering Admission Analytics</h2>
+          <h2>KCET Engineering Admission Analytics 
+            Cutoff-Analyzer
+          </h2>
         </header>
 
         <section className="content">{children}</section>
