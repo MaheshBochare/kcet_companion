@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   backend:
-    build: ./backend/kcet_backend
+    build:
+      context: ./backend/kcet_backend
+      dockerfile: backend.dockerfile
     container_name: kcet_backend
     ports:
       - "8000:8000"
@@ -11,9 +13,39 @@ services:
     depends_on:
       - db
       - redis
+    volumes:
+      # Mount backend source code correctly
+      - ./backend/kcet_backend:/backend
+    command: >
+      gunicorn kcet_backend.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers 1
+      --timeout 60
+      --log-level debug
+      --access-logfile -
+      --error-logfile -
+      
+  celery:
+    build:
+      context: ./backend/kcet_backend
+      dockerfile: backend.dockerfile
+    container_name: kcet_celery
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./backend/kcet_backend:/app
+    working_dir: /app
+    command: celery -A kcet_backend worker -l info
+    restart: always
 
-  frontend:
-    build: ./frontend
+ 
+  fontend:
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
     container_name: kcet_frontend
     ports:
       - "3000:80"
@@ -38,5 +70,26 @@ services:
     ports:
       - "6379:6379"
 
+
+  data_engineering:
+    build:
+      context: .
+      dockerfile: data_platform/dataengineering.dockerfile
+    container_name: kcet_data_engineering
+    depends_on:
+      - db
+    environment:
+      POSTGRES_DB: kcetdb
+      POSTGRES_USER: kcetadmin
+      POSTGRES_PASSWORD: kcetpass
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    volumes:
+      - .:/opt/spark/app
+      - data_lake:/opt/spark/app/data_lake
+    command: >
+      spark-submit data_platform/delta/bronze_to_delta.py
+
 volumes:
   postgres_data:
+  data_lake:
