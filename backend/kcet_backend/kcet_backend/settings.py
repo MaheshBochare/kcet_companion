@@ -118,6 +118,12 @@ DATABASES = {
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
 }'''
+import os
+
+if os.environ.get("RENDER") == "true":
+    MIGRATION_MODULES = {
+        "core": "core.migrations"
+    }
 
 import dj_database_url
 import os
