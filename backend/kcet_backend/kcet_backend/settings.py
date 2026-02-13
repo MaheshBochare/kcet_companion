@@ -46,9 +46,24 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
+    "django_celery_results",
 
 
 ]
+
+# =========================
+# Celery Configuration
+# =========================
+
+CELERY_BROKER_URL = "redis://kcet_redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://kcet_redis:6379/0"
+
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_TIMEZONE = "Asia/Kolkata"
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -69,7 +84,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ROOT_URLCONF = "kcet_backend.urls"
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:3000",
 ]
 
 TEMPLATES = [
@@ -92,18 +107,19 @@ WSGI_APPLICATION = "kcet_backend.wsgi.application"
 # ============================
 # Database (PostgreSQL only)
 # ============================
-
+'''
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "kcet_companion"),
-        "USER": os.environ.get("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "root"),
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "NAME": os.environ.get("POSTGRES_DB", "kcetdb"),
+        "USER": os.environ.get("POSTGRES_USER", "kcetadmin"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "kcetpass"),
+        "HOST": os.environ.get("POSTGRES_HOST", "db"),  # 👈 IMPORTANT
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
-}
-'''import dj_database_url
+}'''
+
+import dj_database_url
 import os
 
 DATABASES = {
@@ -112,9 +128,7 @@ DATABASES = {
         conn_max_age=600,
         ssl_require=True,
     )
-}'''
-
-
+}
 # ============================
 # Authentication
 # ============================
@@ -232,8 +246,9 @@ DEFAULT_FROM_EMAIL = "KCET Companion <kcetcompanion@gmail.com>"
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",  # Vite
-    "http://127.0.0.1:5173",
+    "http://localhost:3000",  # Vite
+    "http://127.0.0.1:3000",
+    
 ]
 
 CSRF_COOKIE_HTTPONLY = False  # React must read it
@@ -242,18 +257,19 @@ CSRF_COOKIE_SAMESITE = "Lax"
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:3000",
+
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:3000",
 ]
