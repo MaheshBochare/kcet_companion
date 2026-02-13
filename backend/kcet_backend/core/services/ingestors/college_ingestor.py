@@ -2,16 +2,18 @@ import pandas as pd
 import numpy as np
 from django.db import transaction
 
-from core.models import College
-from core.services.preprocessing.college_pipeline import CollegeScraper
-from core.services.preprocessing.college_pipeline import CollegeNameMatcher
-
 
 # ============================
-# Preprocessor
+# Preprocessor (SAFE)
 # ============================
 
 class CollegePreprocessor:
+    """
+    Responsible ONLY for:
+    - Scraping
+    - Matching
+    - Cleaning
+    """
 
     def __init__(self, scrape_url, official_excel, sheet_index):
         self.scrape_url = scrape_url
@@ -20,6 +22,13 @@ class CollegePreprocessor:
 
     def run(self):
         print("🔍 Scraping colleges...")
+
+        # 🔒 Lazy imports (critical for stability)
+        from core.services.preprocessing.college_pipeline import (
+            CollegeScraper,
+            CollegeNameMatcher,
+        )
+
         scraper = CollegeScraper(self.scrape_url)
         scraped_df = scraper.scrape()
 
@@ -33,8 +42,11 @@ class CollegePreprocessor:
         df.replace({np.nan: None}, inplace=True)
 
         numeric_cols = [
-            "First_Year_Fees", "Avg_Package", "Highest_Package",
-            "Rating", "National_Ranking"
+            "First_Year_Fees",
+            "Avg_Package",
+            "Highest_Package",
+            "Rating",
+            "National_Ranking",
         ]
 
         for col in numeric_cols:
@@ -44,102 +56,90 @@ class CollegePreprocessor:
         df["Location"] = df["Location"].str.strip()
 
         print(f"✅ Preprocessing complete: {len(df)} clean records")
-
         return df
 
 
 # ============================
-# Ingestor
+# Ingestor (SAFE)
 # ============================
 
 class CollegeIngestor:
+    """
+    Responsible ONLY for:
+    - Imputation
+    - Validation
+    - Saving to DB
+    """
 
-    def __init__(self, df):
-        self.df = df
+    def __init__(self, df: pd.DataFrame):
+        self.df = df.copy()
 
-    def _map(self, row):
+    # ------------------------
+    # Imputation + Mapping
+    # ------------------------
+    def _map_row(self, row):
+        def _num(val, default):
+            return default if pd.isna(val) else val
+
         return {
             "College_name": row["College_Name"],
             "location": row["Location"],
             "approvals": row["Approvals"],
-            "naaccrating": row["NAAC_Grade"],
-            "firstyearfees": row["First_Year_Fees"],
-            "averagepackage": row["Avg_Package"],
-            "highestpackage": row["Highest_Package"],
-            "Rating": row["Rating"],
-            "nationalrank": row["National_Ranking"]
+            "naaccrating": row["NAAC_Grade"] or "No NAAC",
+            "firstyearfees": _num(row["First_Year_Fees"], 450000),
+            "averagepackage": _num(row["Avg_Package"], 0),
+            "highestpackage": _num(row["Highest_Package"], 0),
+            "Rating": _num(row["Rating"], 3.5),
+            "nationalrank": row["National_Ranking"],
         }
 
+    # ------------------------
+    # DB Ingestion
+    # ------------------------
     @transaction.atomic
     def ingest(self):
-        from core.models import College
+        from core.models import College  # lazy import
 
-        # 🛡️ STEP 1: Deduplicate inside the batch
-        self.df = self.df.drop_duplicates(subset=["college_code"], keep="last")
+        self.df = self.df.drop_duplicates(
+            subset=["college_code"], keep="last"
+        )
 
         created = updated = skipped = 0
 
         for _, row in self.df.iterrows():
-            data = self._map(row)
+            data = self._map_row(row)
 
-            obj, is_created = College.objects.update_or_create(
-                college_code=row["college_code"],
-                defaults=data
-            )
+            existing = College.objects.filter(
+                college_code=row["college_code"]
+            ).first()
 
-            if is_created:
-                created += 1
-            else:
-                # Detect whether anything actually changed
-                changed = any(getattr(obj, k) != v for k, v in data.items())
+            if existing:
+                changed = any(
+                    getattr(existing, k) != v for k, v in data.items()
+                )
                 if changed:
+                    for k, v in data.items():
+                        setattr(existing, k, v)
+                    existing.save()
                     updated += 1
                 else:
                     skipped += 1
+            else:
+                College.objects.create(
+                    college_code=row["college_code"],
+                    **data
+                )
+                created += 1
 
-        print(f"📊 Created: {created} | Updated: {updated} | Skipped: {skipped}")
+        print(
+            f"📊 Created: {created} | "
+            f"Updated: {updated} | "
+            f"Skipped: {skipped}"
+        )
+
         return {
             "created": created,
             "updated": updated,
             "skipped": skipped,
-            "total": len(self.df)
-        }
-
-    def _map(self, row):
-
-        highestpackage = row["Highest_Package"]
-        averagepackage = row["Avg_Package"]
-        firstyearfees = row["First_Year_Fees"]
-        rating = row["Rating"]
-        naac = row["NAAC_Grade"]
-        nationalrank = row["National_Ranking"]
-
-        # 🔒 IMPUTATION LAYER
-        if pd.isna(highestpackage):
-            highestpackage = 0
-
-        if pd.isna(averagepackage):
-            averagepackage = 0
-
-        if pd.isna(firstyearfees):
-            firstyearfees = 450000
-
-        if pd.isna(rating):
-            rating = 3.5
-        if pd.isna(nationalrank):
-            nationalrank = None
-
-        if not naac or pd.isna(naac):
-            naac = "No NAAC"
-
-        return {
-            "College_name": row["College_Name"],
-            "location": row["Location"],
-            "approvals": row["Approvals"],
-            "naaccrating": naac,
-            "firstyearfees": firstyearfees,
-            "averagepackage": averagepackage,
-            "highestpackage": highestpackage,
-            "Rating": rating,
-            "nationalrank": nationalrank
+            "total": len(self.df),
         }

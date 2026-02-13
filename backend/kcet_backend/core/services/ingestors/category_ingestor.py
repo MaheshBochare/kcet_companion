@@ -6,6 +6,7 @@ class CategoryIngestor:
                   "3AG","3AK","3AR","3BG","3BK","3BR","SCG","SCK","SCR","STG","STK","STR"]
 
     def run(self):
+        
         with transaction.atomic():
             for c in self.CATEGORIES:
                 Category.objects.get_or_create(code=c)
