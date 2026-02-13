@@ -38,7 +38,7 @@ class VerifyOTPView(APIView):
         if user.otp_expires_at < timezone.now():
             return Response({"error": "OTP expired"}, status=400)
 
-        if user.otp != otp:
+        if str(user.otp) != str(otp):
             return Response({"error": "Invalid OTP"}, status=400)
 
         # 4️⃣ SINGLE ACTIVE SESSION

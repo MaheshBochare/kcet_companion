@@ -1,5 +1,5 @@
-from core.repositories.subscriber_repo import SubscriberRepository
-from core.utils.email_sender import EmailService
+from core.infrastructure.repositories import SubscriberRepository
+from core.services.utils.email_sender import EmailService
 from django.conf import settings
 
 class SubscriptionService:
