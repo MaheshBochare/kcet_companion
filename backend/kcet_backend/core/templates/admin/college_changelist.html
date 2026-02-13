@@ -3,13 +3,12 @@
 
 {% block object-tools %}
 <div class="object-tools">
-    <ul>
-        <li>
-            <a href="ingest/" class="button" style="background:#417690;color:white;">
-                🚀 Run College Ingestion
-            </a>
-        </li>
-    </ul>
+    <a class="button" href="run-ingestion/">
+        🚀 Run Background Ingestion
+    </a>
+    <a class="button" href="upload-excel/">
+        📤 Upload Excel (Fallback)
+    </a>
 </div>
 {{ block.super }}
 {% endblock %}

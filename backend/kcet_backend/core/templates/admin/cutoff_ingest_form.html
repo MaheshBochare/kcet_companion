@@ -1,17 +1,22 @@
 {% extends "admin/base_site.html" %}
+
 {% block content %}
 <h2>Ingest Cutoff Data</h2>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label>Excel File Path</label><br>
-    <input type="text" name="file_path" required><br><br>
+
+    <label>Upload Excel File</label><br>
+    <input type="file" name="excel_file" accept=".xlsx,.xls" required>
+    <br><br>
 
     <label>Round</label><br>
-    <input type="text" name="round_type" placeholder="1gen / 2gen / 2ext" required><br><br>
+    <input type="text" name="round_type" placeholder="1gen / 2gen / 2ext" required>
+    <br><br>
 
     <label>Year</label><br>
-    <input type="number" name="year" required><br><br>
+    <input type="number" name="year" required>
+    <br><br>
 
     <input type="submit" class="default" value="Run Ingestion">
 </form>
