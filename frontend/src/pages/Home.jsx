@@ -6,7 +6,7 @@ import HomeHeader from "../components/home/Headers";
 import SearchResults from "../components/home/SearchResults";
 import "../styles/home.css";
 
-import { useHomeData } from "../hooks/usehomedata";
+import { useHomeData } from "../hooks/UseHomeData";
 import { useSmartSearch } from "../hooks/useSmartSearch";
 import { handleKeyboardNavigation } from "../utils/KeyboardNavigation";
 

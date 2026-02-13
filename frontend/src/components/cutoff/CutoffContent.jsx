@@ -3,7 +3,7 @@ import { fetchCutoffRanks } from "../../api/cutoffApi";
 import Filters from "./filters";
 import DataTable from "./DataTables";
 import Pagination from "./pagination";
-import { useFilters } from "@/hooks/useFilters";
+import { useFilters } from "@/hooks/UseFilters";
 import "@/styles/cutoff.css";
 
 export default function CutoffContent() {

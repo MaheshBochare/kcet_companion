@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchSeatmatrix } from "../../api/seatmatrixapi";
 import Filters from "@/components/common/filters";
-import DataTable from "@/components/common/DataTables";
+import DataTable from "@/components/common/Datatables";
 import Pagination from "@/components/common/pagination";
 
 

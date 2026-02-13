@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 /* ---------- Pages ---------- */
 import Home from "./pages/Home";
-import Cutoff from "./pages/Cutoff";
+import Cutoff from "./pages/cutoff";
 import Seatmatrix from "./pages/seatmatrix";
 
 /* ---------- Auth Pages ---------- */
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import VerifyOTP from "./pages/VerifyOTP";
 import Unauthorized from "./pages/Unauthorized";
 

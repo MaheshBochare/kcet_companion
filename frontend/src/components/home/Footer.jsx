@@ -6,7 +6,7 @@ export default function HomeFooter() {
       </p>
 
       <p style={{ margin: "6px 0 0", fontSize: "0.9rem", opacity: 0.9 }}>
-        Built with ❤️ to help students choose the right college
+        Built with to help students choose the right college
       </p>
     </footer>
   );
