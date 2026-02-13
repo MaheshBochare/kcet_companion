@@ -1,4 +1,5 @@
 from  django.contrib import admin
+from httpcore import request
 from core.utils.excel_export import export_to_excel
 from core.infrastructure.django_models.communication import Subscriber, ApprovedGmail
 from core.infrastructure.django_models.colleges import College
@@ -97,77 +98,118 @@ from django.urls import path
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from core.services.ingestors.college_ingestor import CollegePreprocessor, CollegeIngestor
+
+from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.urls import path
+from django.core.cache import cache
+from django.contrib import admin, messages
+from django.urls import path
+from django.shortcuts import redirect, render
+import pandas as pd
+
 from core.models import College
+from core.forms import CollegeExcelUploadForm
 
 
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):
-    list_display = (
-        "college_code",
-        "College_name",
-        "location",
-        "naaccrating",
-        "Rating",
-    )
-
+    list_display = ("college_code", "College_name", "location")
     change_list_template = "admin/college_changelist.html"
 
-    actions = ["download_excel"]
-
     # ------------------------
-    # Custom Admin URLs
+    # Custom URLs
     # ------------------------
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("ingest/", self.admin_site.admin_view(self.ingest_colleges)),
+            path(
+                "run-ingestion/",
+                self.admin_site.admin_view(self.run_ingestion),
+                name="college_run_ingestion",
+            ),
+            path(
+                "upload-excel/",
+                self.admin_site.admin_view(self.upload_excel),
+                name="college_upload_excel",
+            ),
         ]
         return custom_urls + urls
 
     # ------------------------
-    # Ingest Colleges
+    # Primary: Celery ingestion
     # ------------------------
-    def ingest_colleges(self, request):
+    def run_ingestion(self, request):
+        """
+        Starts background scraping via Celery.
+        Safe: if broker/worker is down → fallback message.
+        """
         try:
-            processor = CollegePreprocessor(
-                scrape_url="https://collegedunia.com/btech/karnataka-colleges?exam_id=61",
-                official_excel=r"C:\Users\mahes\OneDrive\Desktop\kcet_companion\backend\kcet_backend\core\data\collegedunia_college_names.xlsx",
-                sheet_index=3,
-            )
+            # Lazy import (CRITICAL)
+            from core.tasks import scrape_and_ingest_colleges
 
-            df = processor.run()
-            ingestor = CollegeIngestor(df)
-            report = ingestor.ingest()
+            task = scrape_and_ingest_colleges.delay()
 
             messages.success(
                 request,
-                f"Ingestion complete — "
-                f"Created: {report['created']} | "
-                f"Updated: {report['updated']} | "
-                f"Skipped: {report['skipped']}"
+                f"🚀 Background ingestion started successfully "
+                f"(Task ID: {task.id})"
             )
 
         except Exception as e:
-            messages.error(request, f"Ingestion failed: {e}")
+            messages.error(
+                request,
+                "❌ Background ingestion is unavailable. "
+                "Please upload Excel file instead."
+            )
 
         return redirect("..")
 
     # ------------------------
-    # Download Selected as Excel
+    # Fallback: Excel ingestion
     # ------------------------
-    @admin.action(description="Download selected colleges as Excel")
-    def download_excel(self, request, queryset):
-        fields = [
-            "college_code",
-            "College_name",
-            "location",
-            "naaccrating",
-            "Rating",
-        ]
-        return export_to_excel(queryset, fields, "college_data")
+    def upload_excel(self, request):
+        """
+        Manual ingestion when Celery is unavailable.
+        """
+        if request.method == "POST":
+            form = CollegeExcelUploadForm(request.POST, request.FILES)
 
+            if form.is_valid():
+                excel_file = form.cleaned_data["excel_file"]
 
+                try:
+                    df = pd.read_excel(excel_file)
+
+                    from core.services.ingestors.college_ingestor import CollegeIngestor
+
+                    ingestor = CollegeIngestor(df)
+                    result = ingestor.ingest()
+
+                    messages.success(
+                        request,
+                        f"✅ Excel ingestion completed — "
+                        f"Created: {result['created']} | "
+                        f"Updated: {result['updated']} | "
+                        f"Skipped: {result['skipped']}"
+                    )
+
+                    return redirect("..")
+
+                except Exception as e:
+                    messages.error(
+                        request,
+                        f"❌ Excel ingestion failed: {str(e)}"
+                    )
+
+        else:
+            form = CollegeExcelUploadForm()
+
+        return render(
+            request,
+            "admin/college_upload_excel.html",
+            {"form": form},
+        )
 
 @admin.register(CollegeBranch)
 class CollegeBranchAdmin(admin.ModelAdmin):
@@ -197,58 +239,91 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from core.services.ingestors.cutoff_ingestor import CutoffIngestor
 from core.models import Cutoff
+import os
+import tempfile
+
+from django.contrib import admin, messages
+from django.shortcuts import redirect, render
+from django.urls import path
+
+from core.models import Cutoff
+from core.services.ingestors.cutoff_ingestor import CutoffIngestor
+from core.utils.excel_export import export_to_excel
 
 
 @admin.register(Cutoff)
 class CutoffAdmin(admin.ModelAdmin):
-    list_display=[
+    list_display = [
         "college_branch",
         "category",
         "round",
         "year",
-        "rank"
+        "rank",
     ]
-    list_filter=[
+
+    list_filter = [
         "category",
         "round",
         "year",
     ]
+
     change_list_template = "admin/cutoff_changelist.html"
+
     actions = ["download_excel"]
 
+    # ------------------------
+    # Custom Admin URL
+    # ------------------------
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("ingest/", self.admin_site.admin_view(self.ingest_view), name="cutoff_ingest"),
+            path(
+                "ingest/",
+                self.admin_site.admin_view(self.ingest_view),
+                name="cutoff_ingest",
+            ),
         ]
         return custom_urls + urls
 
+    # ------------------------
+    # Ingest Cutoff Data
+    # ------------------------
     def ingest_view(self, request):
         if request.method == "POST":
             try:
-                file_path = request.POST["file_path"]
+                upload = request.FILES["excel_file"]   # 👈 must match template
+                year = request.POST["year"]
                 round_type = request.POST["round_type"]
-                year = int(request.POST["year"])
 
-                from core.services.ingestors.cutoff_ingestor import CutoffIngestor
-                CutoffIngestor(file_path, round_type, year).run()
+                import tempfile, os
 
-                self.message_user(request, "✅ Cutoff data ingested successfully", messages.SUCCESS)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+                    for chunk in upload.chunks():
+                        tmp.write(chunk)
+                    temp_path = tmp.name
+
+                # 🔁 Call your cutoff ingestor here
+                CutoffIngestor(temp_path, round_type, year).run()
+
+                os.remove(temp_path)
+
+                self.message_user(
+                    request,
+                    "✅ Cutoff data ingested successfully",
+                    messages.SUCCESS
+                )
                 return redirect("..")
 
             except Exception as e:
-                self.message_user(request, f"❌ Ingestion failed: {e}", messages.ERROR)
+                self.message_user(
+                    request,
+                    f"❌ Ingestion failed: {e}",
+                    messages.ERROR
+                )
 
         return render(request, "admin/cutoff_ingest_form.html")
-    def download_excel(self, request, queryset):
-        fields = [ 
-        "college_branch",
-        "category",
-        "round",
-        "year",
-        "rank"
-        ]
-        return export_to_excel(queryset, fields, "cutoff_data")
+
+
 
 
 from django.contrib import admin, messages

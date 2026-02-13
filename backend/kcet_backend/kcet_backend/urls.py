@@ -28,10 +28,17 @@ from django.urls import path, include
 from core.api.views.auth_test import AuthTestView
 from core.api.views.auth_otp import SendOTPView
 from core.api.views.auth_login import VerifyOTPView
+from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
+        # Auth
+    path("auth/send-otp/", SendOTPView.as_view()),
+    path("auth/verify-otp/", VerifyOTPView.as_view()),
+    path("auth/auth-test/", AuthTestView.as_view()),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
 
     path("admin/", admin.site.urls),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/", include("core.api.urls")),  # 🔴 REQUIRED
     path("auth-test/", AuthTestView.as_view(), name="auth-test"),
     path('admin/', admin.site.urls),

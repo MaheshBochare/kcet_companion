@@ -5,14 +5,16 @@ from django.views.decorators.csrf import csrf_exempt
 from core.services.preprocessing.seat_matrix import SeatMatrixIngestionService
 import random
 
-
-# Create your views here.
 from django.http import JsonResponse
-from core.services.preprocessing.college_scraper import CollegeIngestionService
+from core.tasks import scrape_and_ingest_colleges
 
 def refresh_colleges(request):
-    count = CollegeIngestionService.refresh_colleges()
-    return JsonResponse({"status": "success", "rows_inserted": count})
+    task = scrape_and_ingest_colleges.delay()
+    return JsonResponse({
+        "message": "Scraping started",
+        "task_id": task.id
+    })
+
 
 import os, tempfile
 from django.http import JsonResponse
