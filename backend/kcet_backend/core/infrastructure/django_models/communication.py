@@ -1,6 +1,5 @@
+#from django.db import models
 from django.db import models
-
-
 class ChatLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user_question = models.TextField()
