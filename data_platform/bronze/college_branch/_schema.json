@@ -1,0 +1,28 @@
+{
+  "table": "college_branch",
+  "schema": "public",
+  "row_count": 21235,
+  "extracted_at": "2026-02-12T17:41:18.117317+00:00",
+  "columns": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "code_branch",
+      "type": "VARCHAR(50)",
+      "nullable": false
+    },
+    {
+      "name": "Branch_Code",
+      "type": "VARCHAR(10)",
+      "nullable": false
+    },
+    {
+      "name": "college_code",
+      "type": "VARCHAR(10)",
+      "nullable": false
+    }
+  ]
+}

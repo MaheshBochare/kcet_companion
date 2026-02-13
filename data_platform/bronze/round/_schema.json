@@ -1,0 +1,33 @@
+{
+  "table": "round",
+  "schema": "public",
+  "row_count": 3,
+  "extracted_at": "2026-02-12T17:41:18.514860+00:00",
+  "columns": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "round_code",
+      "type": "VARCHAR(20)",
+      "nullable": false
+    },
+    {
+      "name": "round_name",
+      "type": "VARCHAR(50)",
+      "nullable": false
+    },
+    {
+      "name": "competition_level",
+      "type": "NUMERIC(4, 2)",
+      "nullable": true
+    },
+    {
+      "name": "cutoff_relaxation_factor",
+      "type": "NUMERIC(4, 2)",
+      "nullable": true
+    }
+  ]
+}

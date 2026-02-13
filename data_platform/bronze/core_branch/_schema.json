@@ -1,0 +1,68 @@
+{
+  "table": "core_branch",
+  "schema": "public",
+  "row_count": 137,
+  "extracted_at": "2026-02-12T17:41:18.186619+00:00",
+  "columns": [
+    {
+      "name": "Branch_Code",
+      "type": "VARCHAR(10)",
+      "nullable": false
+    },
+    {
+      "name": "Branch_Name",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "Stream",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "Degree_Type",
+      "type": "VARCHAR(50)",
+      "nullable": false
+    },
+    {
+      "name": "Duration_Years",
+      "type": "SMALLINT",
+      "nullable": false
+    },
+    {
+      "name": "Is_Core_Branch",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "Is_Emerging_Branch",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "Popularity_Rank",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "Demand_Score",
+      "type": "NUMERIC(4, 2)",
+      "nullable": true
+    },
+    {
+      "name": "Is_Active",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "Created_At",
+      "type": "TIMESTAMP",
+      "nullable": false
+    },
+    {
+      "name": "Updated_At",
+      "type": "TIMESTAMP",
+      "nullable": false
+    }
+  ]
+}

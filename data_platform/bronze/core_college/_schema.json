@@ -1,0 +1,58 @@
+{
+  "table": "core_college",
+  "schema": "public",
+  "row_count": 155,
+  "extracted_at": "2026-02-12T17:41:18.155672+00:00",
+  "columns": [
+    {
+      "name": "college_code",
+      "type": "VARCHAR(10)",
+      "nullable": false
+    },
+    {
+      "name": "College_name",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "location",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "approvals",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "naaccrating",
+      "type": "VARCHAR(255)",
+      "nullable": false
+    },
+    {
+      "name": "firstyearfees",
+      "type": "DOUBLE PRECISION",
+      "nullable": false
+    },
+    {
+      "name": "averagepackage",
+      "type": "DOUBLE PRECISION",
+      "nullable": false
+    },
+    {
+      "name": "highestpackage",
+      "type": "DOUBLE PRECISION",
+      "nullable": false
+    },
+    {
+      "name": "Rating",
+      "type": "DOUBLE PRECISION",
+      "nullable": false
+    },
+    {
+      "name": "nationalrank",
+      "type": "INTEGER",
+      "nullable": true
+    }
+  ]
+}

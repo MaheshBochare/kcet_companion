@@ -1,0 +1,53 @@
+{
+  "table": "category",
+  "schema": "public",
+  "row_count": 24,
+  "extracted_at": "2026-02-12T17:41:17.660280+00:00",
+  "columns": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "category_code",
+      "type": "VARCHAR(10)",
+      "nullable": false
+    },
+    {
+      "name": "category_name",
+      "type": "VARCHAR(100)",
+      "nullable": false
+    },
+    {
+      "name": "reservation_percentage",
+      "type": "NUMERIC(5, 2)",
+      "nullable": true
+    },
+    {
+      "name": "min_eligibility_percentage",
+      "type": "NUMERIC(4, 2)",
+      "nullable": true
+    },
+    {
+      "name": "is_general",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "is_reserved",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "demand_weight",
+      "type": "NUMERIC(4, 2)",
+      "nullable": true
+    },
+    {
+      "name": "priority_rank",
+      "type": "SMALLINT",
+      "nullable": true
+    }
+  ]
+}

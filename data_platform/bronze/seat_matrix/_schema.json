@@ -1,0 +1,53 @@
+{
+  "table": "seat_matrix",
+  "schema": "public",
+  "row_count": 37676,
+  "extracted_at": "2026-02-12T17:41:18.968934+00:00",
+  "columns": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "total_seats",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "filled_seats",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "available_seats",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "last_updated",
+      "type": "TIMESTAMP",
+      "nullable": false
+    },
+    {
+      "name": "category_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "college_branch_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "round_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "year_id",
+      "type": "BIGINT",
+      "nullable": false
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "table": "core_cutoff",
+  "schema": "public",
+  "row_count": 85327,
+  "extracted_at": "2026-02-12T17:41:18.456917+00:00",
+  "columns": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "rank",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "category_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "college_branch_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "round_id",
+      "type": "BIGINT",
+      "nullable": false
+    },
+    {
+      "name": "year_id",
+      "type": "BIGINT",
+      "nullable": false
+    }
+  ]
+}
